@@ -1,0 +1,23 @@
+import { create } from "domain";
+import { text } from "drizzle-orm/pg-core";
+import { timestamp } from "drizzle-orm/pg-core";
+import { jsonb } from "drizzle-orm/pg-core";
+import { integer } from "drizzle-orm/pg-core";
+import { pgTable } from "drizzle-orm/pg-core";
+import { uuidv7 } from "uuidv7";
+
+export const webhooks = pgTable('webhooks', {
+  id: text().primaryKey().$defaultFn(() => uuidv7()),
+  method: text().notNull(),
+  pathname: text().notNull(),
+  ip: text().notNull(),
+  statusCode: integer().notNull().default(200),
+  contextType: text(),
+  contextLength: integer(),
+  queryParams: jsonb().$type<Record<string, string[]>>(),
+  headers: jsonb().$type<Record<string, string>>().notNull(),
+  body: text(),
+  createdAt: timestamp().notNull().defaultNow(),
+
+
+});
