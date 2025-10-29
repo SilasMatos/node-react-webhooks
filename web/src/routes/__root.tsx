@@ -2,7 +2,6 @@ import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
 
 const RootLayout = () => (
   <>
-
     <Outlet />
   </>
 )
