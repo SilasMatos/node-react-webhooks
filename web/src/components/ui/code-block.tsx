@@ -8,7 +8,7 @@ interface CodeBlockProps extends ComponentProps<'div'> {
   language?: string,
 }
 
-export function CodeBlock({ code, language = 'text', className, ...props }: CodeBlockProps) {
+export function CodeBlock({ code, language = 'json', className, ...props }: CodeBlockProps) {
   const [parsedCode, setParsedCode] = useState('')
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export function CodeBlock({ code, language = 'text', className, ...props }: Code
 
   return (
     <div className={twMerge('relative rounded-lg border border-zinc-700 overflow-x-auto', className)} {...props}>
-      <div dangerouslySetInnerHTML={{ __html: parsedCode }} />
+      <div className="[&_pre]:p-4  [&_pre]:font-mono [&_pre]:text-sm [&_pre]:leading-relaxed" dangerouslySetInnerHTML={{ __html: parsedCode }} />
     </div>
   )
 }
