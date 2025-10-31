@@ -6,17 +6,17 @@ import { webhooks } from "@/db/schema"
 import { db } from "@/db/index"
 import { eq } from "drizzle-orm"
 
-export const getWebhook: FastifyPluginAsyncZod = async (app) => {
-app.get('/api/webhooks/:id', {
+export const deleteWebhook: FastifyPluginAsyncZod = async (app) => {
+app.delete('/api/webhooks/:id', {
 
   schema: {
-    summary: 'Get a specific webhook by ID',
+    summary: 'Delete a specific webhook by ID',
     tags: ['Webhooks'],
     params: z.object({
       id: z.uuidv7(),
     }),
     response: {
-      200: createSelectSchema(webhooks),
+      204: z.void(),
       404: z.object({
         message: z.string().default('Webhook not found'),
       })
@@ -26,16 +26,15 @@ app.get('/api/webhooks/:id', {
 
   const { id } = request.params
   const result = await db
-  .select()
-  .from(webhooks)
+  .delete(webhooks)
   .where(eq(webhooks.id, id))
-  .limit(1)
+  .returning()
 
   if (result.length === 0) {
     return reply.status(404).send({ message: 'Webhook not found' })
   }
 
-  return reply.send(result[0])
+  return reply.status(204).send()
 })
 
 }
