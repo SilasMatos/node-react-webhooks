@@ -5,6 +5,8 @@ import { Trash2Icon } from 'lucide-react'
 import { Checkbox } from './ui/checkbox'
 import { useMutation } from '@tanstack/react-query'
 import { useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
+
 interface WebHooksListItemProps {
   webhook: {
     id: string
@@ -12,9 +14,16 @@ interface WebHooksListItemProps {
     pathname: string
     createdAt: Date
   }
+  onWebhookChecked: (webhookId: string) => void
+  isWebhookChecked: boolean
 }
 
-export function WebHooksListItem({ webhook }: WebHooksListItemProps) {
+export function WebHooksListItem({
+  webhook,
+  isWebhookChecked,
+  onWebhookChecked
+}: WebHooksListItemProps) {
+  const [isChecked, setIsChecked] = useState(false)
   const queryClient = useQueryClient()
   const { mutate: deleteWebhook } = useMutation({
     mutationFn: async (id: string) => {
@@ -39,7 +48,12 @@ export function WebHooksListItem({ webhook }: WebHooksListItemProps) {
   return (
     <div className="group rounded-lg transition-colors duration-150 hover:bg-zinc-700/30">
       <div className="flex items-start gap-3 px-4 py-2.5">
-        <Checkbox />
+        <Checkbox
+          onCheckedChange={value => {
+            onWebhookChecked(webhook.id)
+          }}
+          checked={isWebhookChecked}
+        />
         <Link
           to="/webhooks/$id"
           params={{ id: webhook.id }}
